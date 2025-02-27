@@ -27,31 +27,31 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>当前时间</title>
-	<link rel="shortcut icon" href="../favicon.ico">
+	<link rel="shortcut icon" href="../time.ico">
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=DM+Sans|Inter|Space+Mono|Work+Sans|Libre+Franklin&display=swap" rel="stylesheet">
 	<style>
-		/* 基础样式 */
 		body {
-			font-family: 'Segoe UI', Arial, sans-serif;
-			margin: 0;
-			padding: 20px;
-			background: url('../background.jpg') no-repeat center center fixed;
+			background: url('/background1.jpg') no-repeat center center fixed;
 			background-size: cover;
-			color: #ecf0f1;
+			margin: 0;
+			padding: 0;
+			font-family: 'Roboto', sans-serif;
 			display: flex;
 			justify-content: center;
 			align-items: center;
 			height: 100vh;
-			background-color: #2c3e50;
+			color: #fff;
 		}
 
 		.container {
 			text-align: center;
-			background: rgba(255, 255, 255, 0);
+			background: rgba(255, 255, 255, 0.1);
+			border: 1px solid rgba(255, 255, 255, 0.1);
 			padding: 30px;
-			border-radius: 16px;
-			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+			border-radius: 25px;
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+			backdrop-filter: blur(3px);          
 			animation: fadeIn 2s ease-in-out;
 		}
 
@@ -61,31 +61,28 @@
 			color: #ecf0f1;
 			font-weight: 700;
 			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-			animation: glow 1s ease-in-out infinite alternate;
+			animation: glow 1s ease-in-out infinite alternate;           
 		}
 
 		.text {
-			font-size: 1.5rem;
+			font-size: 3.0rem;
 			margin-bottom: 20px;
-			color: #bdc3c7;
+            color: #000;
 		}
 
 		.btn {
 			padding: 10px 25px;
 			margin: 10px;
 			border: none;
-			border-radius: 8px;
+			border-radius: 5px;
 			cursor: pointer;
 			transition: all 0.3s ease;
 			font-weight: 500;
-			background: linear-gradient(135deg, #3498db, #2980b9);
-			color: white;
-			box-shadow: 0 4px 12px rgba(52, 152, 219, 0.25);
 		}
 
 		.btn:hover {
-			transform: translateY(-1px);
-			box-shadow: 0 6px 16px rgba(52, 152, 219, 0.35);
+			transform: translateY(-3px);
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 		}
 
 		.controls {
@@ -93,7 +90,7 @@
 		}
 
 		.btn.fullscreen {
-			background: linear-gradient(135deg, #e74c3c, #c0392b);
+			background-color: #f44336;
 			color: #fff;
 		}
 
@@ -122,7 +119,6 @@
 
 <body>
 	<div class="container">
-		<div class="text">当前时间：</div>
 		<div class="time" id="time"></div>
 		<div class="controls">
 			<select id="fontSelector" class="btn">
