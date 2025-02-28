@@ -1,8 +1,3 @@
-# ExamSchedule
-
-网页版ExamShowboard
-![iis-10](https://github.com/user-attachments/assets/a667fc3b-4b9e-4882-9329-fc36786f1980)
-
 ## 功能
 
 - 实时显示当前时间、当前考试科目、考试起止时间、剩余时间及考试状态。
@@ -31,13 +26,13 @@
 ## 软件截图
 
 ### 主界面
-![main](https://github.com/user-attachments/assets/c41991d9-b169-4b7b-8de5-6192f34ec8c8)   
+![{7CCFDA8C-964C-4CDE-ACAC-8DC8722C4217}](https://github.com/user-attachments/assets/fe9bd451-deb1-4e5c-9eb5-48ff9aa4e155)
 
 #### 考试展板界面
-![exam](https://github.com/user-attachments/assets/0bcf81f7-956b-4bf5-9354-a282d168e972)   
+![{3F470791-C537-460A-809A-30F911742FE4}](https://github.com/user-attachments/assets/6a89dcfd-374a-46cf-9236-1323748caeca)
 
 #### 电子钟表界面   
-![time](https://github.com/user-attachments/assets/79624458-c76b-4008-b010-754a7c971a60)
+![{B7D67B6A-14BE-499D-8A87-E25DB34544A4}](https://github.com/user-attachments/assets/b01de8a3-d991-43f8-9225-16152543fb72)
 
 ## 如何部署？   
  您可以点击查看 [ExamShowboard网页端 部署文档](https://github.com/fhzit/ExamSchedule/wiki)了解详细的部署教程。   
