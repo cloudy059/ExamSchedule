@@ -149,14 +149,14 @@
 
 	<script>
 		setInterval(() => {
-			const d = new Date();
+			const d = new Date();			
 			
 			// 更新时间
-			document.getElementById('time').textContent = d.toLocaleTimeString('zh-CN', { hour12: false });
+			document.getElementById('time').textContent = d.toLocaleTimeString('zh-CN', { hour12: false });			
 			
 			// 新增日期显示（格式：YYYY年MM月DD日）
 			document.getElementById('date').textContent = 
-				`${d.getFullYear()}年${(d.getMonth()+1).toString().padStart(2,'0')}月${d.getDate().toString().padStart(2,'0')}日`;
+				`${d.getFullYear()}年${(d.getMonth()+1).toString().padStart(2,'0')}月${d.getDate().toString().padStart(2,'0')}日`;			
 			
 			// 新增星期显示
 			const weekday = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
