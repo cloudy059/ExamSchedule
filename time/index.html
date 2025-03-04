@@ -22,7 +22,7 @@
 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
-
+	
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,10 +47,10 @@
 		.container {
 			text-align: center;
 			background: rgba(255, 255, 255, 0.1);
-			border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
 			padding: 30px;
 			border-radius: 25px;
-			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 			backdrop-filter: blur(3px);          
 			animation: fadeIn 2s ease-in-out;
 		}
@@ -60,16 +60,19 @@
 			margin: 0;
 			color: #ecf0f1;
 			font-weight: 700;
-			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 			animation: glow 1s ease-in-out infinite alternate;           
 		}
-
-		.text {
-			font-size: 3.0rem;
-			margin-bottom: 20px;
-            color: #000;
+		
+                .date-week {
+			font-size: 1.5rem;
+			margin: 0;
+			color: #ecf0f1;
+			font-weight: 500;
+			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+			animation: glow 1s ease-in-out infinite alternate;
 		}
-
+      
 		.btn {
 			padding: 10px 25px;
 			margin: 10px;
@@ -120,6 +123,10 @@
 <body>
 	<div class="container">
 		<div class="time" id="time"></div>
+        <div class="date-week" style="font-size: 2rem; margin-top: 20px;">
+			<span id="date"></span>
+			<span id="weekday" style="margin-left: 20px;"></span>
+		</div>
 		<div class="controls">
 			<select id="fontSelector" class="btn">
 				<!-- 新增的Google字体选项 -->
@@ -142,11 +149,18 @@
 
 	<script>
 		setInterval(() => {
-			const date = new Date();
-			const time = date.toLocaleTimeString('zh-CN', {
-				hour12: false
-			});
-			document.getElementById('time').textContent = time;
+			const d = new Date();
+			
+			// 更新时间
+			document.getElementById('time').textContent = d.toLocaleTimeString('zh-CN', { hour12: false });
+			
+			// 新增日期显示（格式：YYYY年MM月DD日）
+			document.getElementById('date').textContent = 
+				`${d.getFullYear()}年${(d.getMonth()+1).toString().padStart(2,'0')}月${d.getDate().toString().padStart(2,'0')}日`;
+			
+			// 新增星期显示
+			const weekday = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+			document.getElementById('weekday').textContent = weekday[d.getDay()];
 		}, 1000);
 
 		function changeFontSize(change) {
@@ -159,7 +173,7 @@
 
 		function changeFontFamily() {
 			const selectedFont = document.getElementById('fontSelector').value;
-			const elements = document.querySelectorAll('.time, .text');
+			const elements = document.querySelectorAll('.time, .date-week');
 			elements.forEach(element => {
 				element.style.fontFamily = selectedFont;
 			});
