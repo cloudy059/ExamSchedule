@@ -25,14 +25,14 @@ document.addEventListener("DOMContentLoaded", () => {
     roomElem.textContent = room;
 
     function fetchData() {
-        return fetch('exam_config.json', { cache: "no-store" }) // 不保留缓存
+        return fetch('exam_config.json', { cache: "no-store" }) 
             .then(response => response.json())
             .then(data => {
                 displayExamInfo(data);
                 updateCurrentTime();
                 updateExamInfo(data);
-                setInterval(() => updateCurrentTime(), 1000); // Update current time every second
-                setInterval(() => updateExamInfo(data), 1000); // Update exam info every second
+                setInterval(() => updateCurrentTime(), 1000); 
+                setInterval(() => updateExamInfo(data), 1000);
             })
             .catch(error => console.error('Error fetching exam data:', error));
     }
@@ -141,21 +141,30 @@ document.addEventListener("DOMContentLoaded", () => {
             const start = new Date(exam.start);
             const end = new Date(exam.end);
             let status = "";
+            
             if (now < start) {
-                status = "即将开始";
+                status = "未开始";
             } else if (now > end) {
                 status = "已结束";
             } else {
                 status = "进行中";
             }
+            
+            const month = start.getMonth() + 1;
+            const day = start.getDate();
+            const dateStr = `${month}月${day}日`;
 
             const row = document.createElement("tr");
-            row.className = `exam-status-${status}`;
+            row.className = `exam-status-${status}`;             
+          
             row.innerHTML = `
+                <td>${dateStr}</td>
                 <td>${exam.name}</td>
                 <td>${formatTimeWithoutSeconds(new Date(exam.start).toLocaleTimeString('zh-CN', { hour12: false }))}</td>
                 <td>${formatTimeWithoutSeconds(new Date(exam.end).toLocaleTimeString('zh-CN', { hour12: false }))}</td>
+                <td class="status-${status === "未开始" ? "not-started" : status === "进行中" ? "in-progress" : "ended"}">${status}</td>
             `;
+            
             examTableBodyElem.appendChild(row);
         });
     }
