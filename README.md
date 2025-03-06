@@ -29,7 +29,7 @@
 ![{7CCFDA8C-964C-4CDE-ACAC-8DC8722C4217}](https://github.com/user-attachments/assets/fe9bd451-deb1-4e5c-9eb5-48ff9aa4e155)
 
 #### 考试展板界面
-![{3F470791-C537-460A-809A-30F911742FE4}](https://github.com/user-attachments/assets/6a89dcfd-374a-46cf-9236-1323748caeca)
+![看板](https://github.com/user-attachments/assets/1e01f0e9-7ddf-4c03-b84e-b1e575beb6c8)
 
 #### 电子钟表界面   
 ![{B7D67B6A-14BE-499D-8A87-E25DB34544A4}](https://github.com/user-attachments/assets/b01de8a3-d991-43f8-9225-16152543fb72)
