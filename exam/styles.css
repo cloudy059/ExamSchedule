@@ -2,7 +2,7 @@ body {
     font-family: 'HarmonyOS Sans SC Regular', 'Roboto', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: url('/background2.jpg') no-repeat center center fixed;
+    background: url('/img/background2.jpg') no-repeat center center fixed;
     background-size: cover;
     animation: fadeIn 1s;
     color: #e0e0e0;
@@ -139,14 +139,14 @@ h1 {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 15px;
     border: 1px solid #333;
     background-color: rgba(31, 31, 31, 0.5);
 }
 
 th, td {
     border: 1px solid #333;
-    padding: 8px 12px; /* 调整单元格内边距 */
+    padding: 4px; /* 缩短行高 */
     font-size: 2rem;
     text-align: center;
 }
@@ -177,6 +177,7 @@ th {
     font-weight: bold;
 }
 
+/* 日期单元格样式 */
 td.date-cell {
     font-size: 1.8rem;
     line-height: 1.2;

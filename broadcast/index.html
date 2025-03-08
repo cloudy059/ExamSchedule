@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考试语音播报系统</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-container">
+                <h1 id="examTitle">考试语音播报系统</h1>
+                <button id="importConfig" class="import-btn">导入配置文件</button>
+                <input type="file" id="configFileInput" accept=".json" style="display: none;">
+                <!-- 在body的container div末尾添加 -->
+                <input type="file" id="soundFileInput" accept="audio/*" style="display: none;">
+            </div>
+        </header>
+
+        <div class="clock-container">
+            <div class="time" id="currentTime">00:00:00</div>
+            <div class="date" id="currentDate">2023年1月1日 星期一</div>
+        </div>
+
+        <div class="exam-info">
+            <div class="info-row">
+                <div class="info-item">
+                    <label>考试科目：</label>
+                    <select id="examSubject"></select>
+                </div>
+                <div class="info-item">
+                    <label>考试状态：</label>
+                    <span id="examStatus" class="status">未开始</span>
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="info-item">
+                    <label>考试日期：</label>
+                    <span id="examDate">--</span>
+                </div>
+                <div class="info-item">
+                    <label>开始时间：</label>
+                    <span id="startTime">--:--</span>
+                </div>
+                <div class="info-item">
+                    <label>结束时间：</label>
+                    <span id="endTime">--:--</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-container">
+            <h2>铃声设置</h2>
+            <div class="alert-list" id="alertList">
+                <!-- 铃声设置项将通过JavaScript动态生成 -->
+                <!-- 在alert-item中添加时间输入框 -->
+                <div class="alert-item">
+                    <div class="alert-name">
+                        考前<input type="number" class="time-input" data-type="before20min" value="20">分钟
+                    </div>
+                    <div class="alert-time" id="before20min-time">--:--</div>
+                    <!-- 其他内容不变 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

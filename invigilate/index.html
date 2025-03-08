@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>监考分配系统</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .exam-icon {
+            height: 70px;
+            width: auto;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+        .exam-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-right: 20px;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .btn {
+            padding: 8px 15px;
+            background-color: #1890ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #40a9ff;
+        }
+        .random-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: red;
+            margin-right: 15px;
+            padding: 5px 15px;            
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+        .content {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .column {
+            flex: 1;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        .red-bold {
+            color: red;
+            font-weight: bold;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        .file-input {
+            display: none;
+        }
+        .file-label {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #52c41a;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .file-label:hover {
+            background-color: #73d13d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div style="display: flex; align-items: center;">
+            <img src="xh.png" alt="考场图标" class="exam-icon">
+            <h1 class="exam-title" id="examTitle">监考分配系统</h1>
+        </div>
+        <div class="buttons">
+            <span class="random-number" id="randomNumber"></span>
+            <label for="fileInput" class="file-label">选择Excel文件</label>
+            <input type="file" id="fileInput" class="file-input" accept=".xlsx,.xls">
+            <button class="btn" id="randomBtn">随机号码</button>
+            <button class="btn" id="generateBtn">生成考场</button>
+            <button class="btn" id="exportBtn">导出结果</button>
+            <button class="btn" id="fullscreenBtn">全屏显示</button>
+        </div>
+    </div>
+
+    <div class="content" id="content">
+        <div class="column" id="leftColumn"></div>
+        <div class="column" id="middleColumn"></div>
+        <div class="column" id="rightColumn"></div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="modal" id="modal"></div>
+
+    <script>
+        let excelData = [];
+        let maxGroup = 0;
+        let randomNum = 0;
+        let examName = "";
+        let headers = [];
+        let groupValues = []; // 存储组别列的所有值
+
+        document.getElementById('fileInput').addEventListener('change', handleFile);
+        document.getElementById('randomBtn').addEventListener('click', generateRandomNumber);
+        document.getElementById('generateBtn').addEventListener('click', generateClassrooms);
+        document.getElementById('exportBtn').addEventListener('click', exportResults);
+        document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
+
+        function handleFile(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                // 获取第一个工作表
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                
+                // 获取考试名称 (A1单元格)
+                examName = firstSheet['A1'] ? firstSheet['A1'].v : "未知考试";
+                document.getElementById('examTitle').textContent = examName;
+                
+                // 转换为JSON
+                const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                
+                // 获取表头 (第二行)
+                headers = jsonData[1] || [];
+                
+                // 获取数据 (从第三行开始)
+                excelData = jsonData.slice(2).filter(row => row.length > 0);
+                
+                // 计算最大组别
+                maxGroup = excelData.length;
+                
+                // 提取组别列的所有值 (假设组别是第一列，索引为0)
+                groupValues = excelData.map(row => row[0]);
+                
+                // 清空随机数和考场分配
+                document.getElementById('randomNumber').textContent = "";
+                clearColumns();
+                
+                alert(`Excel文件加载成功！共有${maxGroup}个组别。`);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function generateRandomNumber() {
+            if (groupValues.length === 0) {
+                alert("请先加载Excel文件！");
+                return;
+            }
+            
+            // 从组别列中随机抽取一个值
+            const randomIndex = Math.floor(Math.random() * groupValues.length);
+            randomNum = groupValues[randomIndex];
+            
+            // 显示弹窗
+            const modal = document.getElementById('modal');
+            const overlay = document.getElementById('overlay');
+            
+            modal.textContent = randomNum;
+            modal.style.display = 'block';
+            overlay.style.display = 'block';
+            
+            // 5秒后关闭弹窗
+            setTimeout(() => {
+                modal.style.display = 'none';
+                overlay.style.display = 'none';
+                
+                // 在按钮左边显示随机数
+                document.getElementById('randomNumber').textContent = randomNum;
+            }, 5000);
+        }
+
+        function generateClassrooms() {
+            if (!randomNum) {
+                alert("请先生成随机号码！");
+                return;
+            }
+            
+            if (excelData.length === 0) {
+                alert("请先加载Excel文件！");
+                return;
+            }
+            
+            // 找到随机数在组别列中的索引
+            const randomIndex = groupValues.indexOf(randomNum);
+            if (randomIndex === -1) {
+                alert("无法找到所选随机数对应的组别！");
+                return;
+            }
+            
+            // 重新排序组别：将随机数前的所有值移到末尾
+            const reorderedGroups = [
+                ...groupValues.slice(randomIndex), // 从随机数开始到末尾的值
+                ...groupValues.slice(0, randomIndex) // 从开始到随机数前的值
+            ];
+            
+            // 将重新排序后的组别填入考场列
+            for (let i = 0; i < excelData.length; i++) {
+                // 考场列索引 (假设是最后一列)
+                const classroomIndex = headers.length - 1;
+                
+                // 分配考场号
+                excelData[i][classroomIndex] = reorderedGroups[i];
+            }
+            
+            // 显示结果
+            displayResults();
+        }
+
+        function displayResults() {
+            clearColumns();
+            
+            // 计算每列显示的组数
+            const groupsPerColumn = Math.ceil(excelData.length / 3);
+            
+            // 创建表格
+            const leftTable = createTable(0, groupsPerColumn);
+            const middleTable = createTable(groupsPerColumn, groupsPerColumn * 2);
+            const rightTable = createTable(groupsPerColumn * 2, excelData.length);
+            
+            // 添加到页面
+            document.getElementById('leftColumn').appendChild(leftTable);
+            document.getElementById('middleColumn').appendChild(middleTable);
+            document.getElementById('rightColumn').appendChild(rightTable);
+        }
+
+        function createTable(startIndex, endIndex) {
+            const table = document.createElement('table');
+            
+            // 创建表头
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // 创建表体
+            const tbody = document.createElement('tbody');
+            
+            for (let i = startIndex; i < endIndex && i < excelData.length; i++) {
+                const row = document.createElement('tr');
+                
+                for (let j = 0; j < headers.length; j++) {
+                    const td = document.createElement('td');
+                    td.textContent = excelData[i][j] || '';
+                    
+                    // 如果是考场列，添加红色加粗样式
+                    if (j === headers.length - 1) {
+                        td.classList.add('red-bold');
+                    }
+                    
+                    row.appendChild(td);
+                }
+                
+                tbody.appendChild(row);
+            }
+            
+            table.appendChild(tbody);
+            return table;
+        }
+
+        function clearColumns() {
+            document.getElementById('leftColumn').innerHTML = '';
+            document.getElementById('middleColumn').innerHTML = '';
+            document.getElementById('rightColumn').innerHTML = '';
+        }
+
+        function exportResults() {
+            if (excelData.length === 0) {
+                alert("没有数据可导出！");
+                return;
+            }
+            
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now.getSeconds().toString().padStart(2, '0')}`;
+            const fileName = `${examName}_${dateStr}`;
+            
+            html2canvas(document.body).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jspdf.jsPDF('l', 'mm', 'a4');
+                
+                // 计算宽高比
+                const imgWidth = 297; // A4宽度(mm)
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                pdf.save(`${fileName}.pdf`);
+            });
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`全屏显示错误: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+    </script>
+</body>
+</html>

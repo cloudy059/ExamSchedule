@@ -25,14 +25,14 @@ document.addEventListener("DOMContentLoaded", () => {
     roomElem.textContent = room;
 
     function fetchData() {
-        return fetch('exam_config.json', { cache: "no-store" }) 
+        return fetch('exam_config.json', { cache: "no-store" }) // 不保留缓存
             .then(response => response.json())
             .then(data => {
                 displayExamInfo(data);
                 updateCurrentTime();
                 updateExamInfo(data);
-                setInterval(() => updateCurrentTime(), 1000); 
-                setInterval(() => updateExamInfo(data), 1000);
+                setInterval(() => updateCurrentTime(), 1000); // Update current time every second
+                setInterval(() => updateExamInfo(data), 1000); // Update exam info every second
             })
             .catch(error => console.error('Error fetching exam data:', error));
     }
@@ -155,8 +155,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const dateStr = `${month}月${day}日`;
 
             const row = document.createElement("tr");
-            row.className = `exam-status-${status}`;             
-          
+            row.className = `exam-status-${status}`; // 使用与CSS匹配的类名
+            
+            // 创建表格内容
             row.innerHTML = `
                 <td>${dateStr}</td>
                 <td>${exam.name}</td>
