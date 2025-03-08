@@ -1,5 +1,4 @@
-## 功能
-
+## 考试展板功能
 - 实时显示当前时间、当前考试科目、考试起止时间、剩余时间及考试状态。
 - 支持全屏显示。
 - 支持设置时间偏移和考场信息，并保存到浏览器Cookie中。
@@ -33,6 +32,12 @@
 
 #### 电子钟表界面   
 ![{B7D67B6A-14BE-499D-8A87-E25DB34544A4}](https://github.com/user-attachments/assets/b01de8a3-d991-43f8-9225-16152543fb72)
+
+#### 考试语音播报界面 
+![考试播报](https://github.com/user-attachments/assets/f2ff0512-6726-4cfb-a6e6-681f12cedf45)
+
+#### 监考分配界面 
+![监考分配](https://github.com/user-attachments/assets/28f5c9c7-ad0b-4ac4-aac4-48e4b43444dc)
 
 ## 如何部署？   
  您可以点击查看 [ExamShowboard网页端 部署文档](https://github.com/fhzit/ExamSchedule/wiki)了解详细的部署教程。   
