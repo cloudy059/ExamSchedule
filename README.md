@@ -34,7 +34,7 @@
 ![{B7D67B6A-14BE-499D-8A87-E25DB34544A4}](https://github.com/user-attachments/assets/b01de8a3-d991-43f8-9225-16152543fb72)
 
 #### 考试语音播报界面 
-![考试播报](https://github.com/user-attachments/assets/f2ff0512-6726-4cfb-a6e6-681f12cedf45)
+![{53AB7A2C-A5B2-4832-829E-3AC2A30FA212}](https://github.com/user-attachments/assets/e28a9e64-7688-4885-b125-37855c56b430)
 
 #### 监考分配界面 
 ![监考分配](https://github.com/user-attachments/assets/28f5c9c7-ad0b-4ac4-aac4-48e4b43444dc)
