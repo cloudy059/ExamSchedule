@@ -653,13 +653,21 @@ function updateCountdown(now) {
         return;
     }
     
-    // 转换为时分秒
-    const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+    // 转换为天、时、分、秒
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
     
     // 格式化倒计时
-    const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    let formattedTime = '';
+    if (days > 0) {
+        // 如果超过24小时，显示天数
+        formattedTime = `${days}天 ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    } else {
+        // 否则只显示时分秒
+        formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
     
     // 更新倒计时文本
     document.getElementById('countdown').textContent = `${countdownText} ${formattedTime}`;
