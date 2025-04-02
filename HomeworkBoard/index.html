@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班级作业看板</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="light-mode">
+    <header>
+        <div class="header-left">
+            <h1 id="class-name" contenteditable="true">高三一班</h1>
+            <button id="save-class-name"><i class="fas fa-save"></i></button>
+        </div>
+        <div class="header-center">
+            <h2>今日作业 - <span id="current-date"></span></h2>
+        </div>
+        <div class="header-right">
+            <button id="font-increase" title="增大字体"><i class="fas fa-plus"></i></button>
+            <button id="font-decrease" title="减小字体"><i class="fas fa-minus"></i></button>
+            <button id="toggle-theme" title="切换日夜模式"><i class="fas fa-moon"></i></button>
+            <button id="date-picker" title="选择日期"><i class="fas fa-calendar-alt"></i></button>
+            <input type="date" id="date-input" style="display: none;">
+            <button id="fullscreen" title="全屏"><i class="fas fa-expand"></i></button>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="homework-section">
+                <div class="homework-stats">
+                    <div class="stat-card">
+                        <h3>总作业数</h3>
+                        <p id="total-homework">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>已完成</h3>
+                        <p id="completed-homework">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>未完成</h3>
+                        <p id="incomplete-homework">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>今日截止</h3>
+                        <p id="due-today">0</p>
+                    </div>
+                </div>
+
+                <div class="subjects-container">
+                    <!-- 学科卡片将通过JavaScript动态生成 -->
+                </div>
+            </section>
+
+            <section class="attendance-section">
+                <div class="attendance-panel">
+                    <h2>出勤统计</h2>
+                    <div class="attendance-stats">
+                        <p>应到人数: <span id="total-students">0</span></p>
+                        <p>实到人数: <span id="present-students">0</span></p>
+                    </div>
+                    <div class="attendance-lists">
+                        <div class="attendance-list">
+                            <h3>请假名单</h3>
+                            <ul id="leave-list"></ul>
+                        </div>
+                        <div class="attendance-list">
+                            <h3>迟到名单</h3>
+                            <ul id="late-list"></ul>
+                        </div>
+                        <div class="attendance-list">
+                            <h3>旷课名单</h3>
+                            <ul id="absent-list"></ul>
+                        </div>
+                    </div>
+                    <div class="duty-students">
+                        <h3>值日生</h3>
+                        <div class="duty-groups">
+                            <div class="duty-group">
+                                <h4>班级值日</h4>
+                                <ul id="classroom-duty-list"></ul>
+                            </div>
+                            <div class="duty-group">
+                                <h4>包干区值日</h4>
+                                <ul id="area-duty-list"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="manage-attendance" class="btn-primary">管理出勤</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 添加作业模态框 -->
+    <div id="add-homework-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>添加作业</h2>
+            <form id="add-homework-form">
+                <input type="hidden" id="subject-input">
+                <input type="hidden" id="edit-homework-id">
+                <div class="form-group">
+                    <label for="homework-title">作业标题:</label>
+                    <input type="text" id="homework-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="homework-description">作业描述:</label>
+                    <textarea id="homework-description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="homework-due-date">截止日期:</label>
+                    <input type="date" id="homework-due-date" required>
+                </div>
+                <button type="submit" class="btn-primary">保存</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 管理出勤模态框 -->
+    <!-- 在出勤管理模态框中添加下载模板按钮 -->
+    <div id="attendance-modal" class="modal">
+        <div class="modal-content attendance-modal-content">
+            <span class="close">&times;</span>
+            <h2>出勤管理</h2>
+            <div class="attendance-actions">
+                <button id="import-students" class="btn-primary">导入学生名单</button>
+                <button id="export-students" class="btn-primary">导出学生名单</button>
+                <button id="download-template" class="btn-primary">下载名单模板</button>
+                <button id="clear-students" class="btn-danger">清空学生名单</button>
+                <input type="file" id="import-students-file" style="display: none;">
+            </div>
+            <div class="student-cards-container">
+                <!-- 学生卡片将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 数据导出导入模态框 -->
+    <div id="data-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>数据管理</h2>
+            <div class="data-actions">
+                <button id="export-data" class="btn-primary">导出数据</button>
+                <button id="import-data" class="btn-primary">导入数据</button>
+                <input type="file" id="import-data-file" style="display: none;">
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <button id="data-management" class="btn-primary">数据管理</button>
+        <p>&copy; 2023 班级作业看板系统</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
