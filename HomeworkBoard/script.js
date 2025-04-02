@@ -442,7 +442,37 @@ function saveStudentsData() {
 // 打开出勤管理模态框
 function openAttendanceModal() {
     renderStudentCards();
+    
+    // 检查是否已经存在清除按钮，如果不存在则添加
+    if (!document.getElementById('clear-all-attendance')) {
+        const attendanceActions = document.querySelector('.attendance-actions');
+        if (attendanceActions) {
+            const clearButton = document.createElement('button');
+            clearButton.id = 'clear-all-attendance';
+            clearButton.className = 'btn-danger';
+            clearButton.textContent = '清除全部勾选';
+            clearButton.addEventListener('click', clearAllAttendance);
+            attendanceActions.appendChild(clearButton);
+        }
+    }
+    
     elements.attendanceModal.style.display = 'block';
+}
+
+// 清除全部勾选状态
+function clearAllAttendance() {    
+        // 清空所有出勤相关数组
+        studentsData.leave = [];
+        studentsData.late = [];
+        studentsData.absent = [];
+        studentsData.classroomDuty = [];
+        studentsData.areaDuty = [];
+        
+        // 保存数据并更新界面
+        saveStudentsData();
+        renderStudentCards();
+        updateAttendance();
+        
 }
 
 // 渲染学生卡片
