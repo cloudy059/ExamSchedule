@@ -1,0 +1,752 @@
+/* 基础样式 */
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #2196F3;
+    --danger-color: #F44336;
+    --warning-color: #FFC107;
+    --success-color: #8BC34A;
+    --light-bg: #f5f5f5;
+    --light-card: #ffffff;
+    --light-text: #333333;
+    --dark-bg: #121212;
+    --dark-card: #1e1e1e;
+    --dark-text: #f5f5f5;
+    --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
+    --font-size-base: 16px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Microsoft YaHei', sans-serif;
+    transition: font-size 0.3s ease;
+}
+
+body {
+    font-size: var(--font-size-base);
+    transition: var(--transition);
+}
+
+.light-mode {
+    background-color: var(--light-bg);
+    color: var(--light-text);
+}
+
+.dark-mode {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+.container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 顶栏样式 */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+
+.class-info {
+    display: flex;
+    flex-direction: column;
+}
+
+#class-name {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    outline: none;
+}
+
+#class-name:focus {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+
+.today-info {
+    display: flex;
+    align-items: center;
+}
+
+.today-info h2 {
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+}
+
+.controls button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.controls button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 主内容区域 */
+.main-content {
+    display: grid;
+    grid-template-columns: 3fr 1fr; /* 从2fr 1fr改为3fr 1fr，使出勤区域更窄 */
+    gap: 20px;
+}
+
+/* 作业管理区域 */
+.homework-section {
+    background-color: var(--light-card);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.dark-mode .homework-section {
+    background-color: var(--dark-card);
+}
+
+.homework-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.dark-mode .homework-stats {
+    border-bottom-color: #333;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.dark-mode .stat-label {
+    color: #aaa;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.subjects-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.subject-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 15px;
+    box-shadow: var(--shadow);
+    border-top: 4px solid var(--primary-color);
+    transition: var(--transition);
+    cursor: pointer;
+    position: relative;
+}
+
+.dark-mode .subject-card {
+    background-color: #2a2a2a;
+}
+
+.subject-card:hover {
+    transform: translateY(-5px);
+}
+
+.subject-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.subject-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.subject-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.subject-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #666;
+    transition: var(--transition);
+}
+
+.dark-mode .subject-actions button {
+    color: #aaa;
+}
+
+.subject-actions button:hover {
+    color: var(--danger-color);
+}
+
+.homework-list {
+    list-style: none;
+}
+
+.homework-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.dark-mode .homework-item {
+    border-bottom-color: #333;
+}
+
+.homework-item:last-child {
+    border-bottom: none;
+}
+
+.homework-checkbox {
+    margin-top: 3px;
+}
+
+.homework-content {
+    flex-grow: 1;
+    transition: var(--transition);
+}
+
+.homework-completed .homework-content {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.homework-deadline {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 5px;
+}
+
+.dark-mode .homework-deadline {
+    color: #aaa;
+}
+
+.homework-due-soon {
+    color: var(--warning-color);
+}
+
+.homework-overdue {
+    color: var(--danger-color);
+}
+
+.homework-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.homework-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #666;
+    transition: var(--transition);
+}
+
+.dark-mode .homework-actions button {
+    color: #aaa;
+}
+
+.homework-actions button:hover {
+    color: var(--danger-color);
+}
+
+.add-subject-card {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: var(--border-radius);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    height: 100%;
+    min-height: 150px;
+}
+
+.dark-mode .add-subject-card {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.add-subject-card:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .add-subject-card:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.add-subject-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #888;
+}
+
+.dark-mode .add-subject-icon {
+    color: #aaa;
+}
+
+/* 出勤统计区域 */
+.attendance-section {
+    background-color: var(--light-card);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.dark-mode .attendance-section {
+    background-color: var(--dark-card);
+}
+
+.attendance-section h2 {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.dark-mode .attendance-section h2 {
+    border-bottom-color: #333;
+}
+
+.attendance-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.attendance-lists {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.attendance-list h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.dark-mode .attendance-list h3 {
+    color: #aaa;
+}
+
+.student-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.student-tag {
+    background-color: #f0f0f0;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.dark-mode .student-tag {
+    background-color: #333;
+}
+
+.duty-lists {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.duty-section h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.dark-mode .duty-section h3 {
+    color: #aaa;
+}
+
+.duty-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+/* 模态框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--light-card);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: modalFadeIn 0.3s;
+}
+
+.attendance-modal-content {
+    max-width: 800px; /* 从800px减小到600px */
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.dark-mode .modal-content {
+    background-color: var(--dark-card);
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888;
+}
+
+.dark-mode .close-btn {
+    color: #aaa;
+}
+
+.close-btn:hover {
+    color: var(--danger-color);
+}
+
+.modal h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    color: #333;
+}
+
+.dark-mode .form-group input,
+.dark-mode .form-group textarea {
+    background-color: #333;
+    border-color: #444;
+    color: #eee;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #3d8b40;
+}
+
+.btn-secondary {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.dark-mode .btn-secondary {
+    background-color: #444;
+    color: #eee;
+}
+
+.btn-secondary:hover {
+    background-color: #e0e0e0;
+}
+
+.dark-mode .btn-secondary:hover {
+    background-color: #555;
+}
+
+/* 出勤管理样式 */
+.attendance-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.attendance-actions button {
+    padding: 8px 15px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.dark-mode .attendance-actions button {
+    background-color: #333;
+    color: #eee;
+}
+
+.attendance-actions button:hover {
+    background-color: #e0e0e0;
+}
+
+.dark-mode .attendance-actions button:hover {
+    background-color: #444;
+}
+
+.student-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.student-card {
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    padding: 10px;
+    transition: var(--transition);
+}
+
+.dark-mode .student-card {
+    background-color: #2a2a2a;
+}
+
+.student-card:hover {
+    background-color: #f0f0f0;
+}
+
+.dark-mode .student-card:hover {
+    background-color: #333;
+}
+
+.student-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.student-number {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.dark-mode .student-number {
+    color: #aaa;
+}
+
+.student-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.status-checkbox {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.status-checkbox input {
+    margin-right: 3px;
+}
+
+.duty-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.duty-checkbox {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.dark-mode .duty-checkbox {
+    background-color: #333;
+}
+
+.duty-checkbox input {
+    margin-right: 5px;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .attendance-section {
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .controls {
+        margin-top: 15px;
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .homework-stats {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .stat-item {
+        flex: 1 0 40%;
+    }
+    
+    .subjects-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .attendance-lists,
+    .duty-lists {
+        grid-template-columns: 1fr;
+    }
+    
+    .student-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+}
+
+/* 拖拽样式 */
+.sortable-ghost {
+    opacity: 0.5;
+    background-color: #f0f0f0;
+}
+
+.dark-mode .sortable-ghost {
+    background-color: #333;
+}
+
+.sortable-drag {
+    opacity: 0.8;
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.slide-in {
+    animation: slideIn 0.3s;
+}
