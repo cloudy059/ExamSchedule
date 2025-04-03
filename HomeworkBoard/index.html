@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班级作业看板</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body class="light-mode">
+    <div class="container">
+        <!-- 顶栏 -->
+        <header class="top-bar">
+            <div class="class-info">
+                <h1 id="class-name" contenteditable="true">高三(1)班</h1>
+                <div class="today-info">
+                    <h2>今日作业</h2>
+                    <span id="current-date"></span>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="font-decrease" title="缩小字体"><i class="bi bi-dash-circle"></i></button>
+                <button id="font-increase" title="放大字体"><i class="bi bi-plus-circle"></i></button>
+                <button id="theme-toggle" title="切换日夜模式"><i class="bi bi-moon"></i></button>
+                <button id="date-picker" title="选择日期"><i class="bi bi-calendar3"></i></button>
+                <button id="fullscreen-toggle" title="全屏显示"><i class="bi bi-fullscreen"></i></button>
+                <button id="export-data" title="导出数据"><i class="bi bi-download"></i></button>
+                <button id="import-data" title="导入数据"><i class="bi bi-upload"></i></button>
+                <input type="file" id="import-file" accept=".json" style="display: none;">
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- 作业管理区域 -->
+            <div class="homework-section">
+                <div class="homework-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">总作业数</span>
+                        <span class="stat-value" id="total-homework">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">已完成</span>
+                        <span class="stat-value" id="completed-homework">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">未完成</span>
+                        <span class="stat-value" id="incomplete-homework">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">今日截止</span>
+                        <span class="stat-value" id="due-today">0</span>
+                    </div>
+                </div>
+
+                <div class="subjects-container" id="subjects-container">
+                    <!-- 学科卡片将通过JS动态生成 -->
+                </div>
+            </div>
+
+            <!-- 出勤统计区域 -->
+            <div class="attendance-section" id="attendance-panel">
+                <h2>出勤统计</h2>
+                <div class="attendance-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">应到人数</span>
+                        <span class="stat-value" id="total-students">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">实到人数</span>
+                        <span class="stat-value" id="present-students">0</span>
+                    </div>
+                </div>
+
+                <div class="attendance-lists">
+                    <div class="attendance-list">
+                        <h3>请假 (<span id="leave-count">0</span>)</h3>
+                        <div class="student-list" id="leave-list"></div>
+                    </div>
+                    <div class="attendance-list">
+                        <h3>迟到 (<span id="late-count">0</span>)</h3>
+                        <div class="student-list" id="late-list"></div>
+                    </div>
+                    <div class="attendance-list">
+                        <h3>旷课 (<span id="absent-count">0</span>)</h3>
+                        <div class="student-list" id="absent-list"></div>
+                    </div>
+                </div>
+
+                <div class="duty-lists">
+                    <div class="duty-section">
+                        <h3>班级值日</h3>
+                        <div class="duty-list" id="class-duty-list"></div>
+                    </div>
+                    <div class="duty-section">
+                        <h3>包干区值日</h3>
+                        <div class="duty-list" id="area-duty-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框 - 添加/编辑作业 -->
+    <div class="modal" id="homework-modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="modal-title">添加作业</h2>
+            <form id="homework-form">
+                <input type="hidden" id="edit-homework-id">
+                <input type="hidden" id="edit-subject">
+                <div class="form-group">
+                    <label for="homework-content">作业内容</label>
+                    <textarea id="homework-content" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="homework-deadline">截止日期</label>
+                    <input type="text" id="homework-deadline" placeholder="选择日期">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">保存</button>
+                    <button type="button" class="btn-secondary" id="cancel-homework">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 模态框 - 出勤管理 -->
+    <div class="modal" id="attendance-modal">
+        <div class="modal-content attendance-modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>出勤管理</h2>
+            <div class="attendance-actions">
+                <button id="import-students">导入名单</button>
+                <button id="export-template">导出模板</button>
+                <button id="add-student">添加学生</button>
+                <button id="clear-attendance">清空勾选</button>
+                <button id="clear-students">清空名单</button>
+            </div>
+            <div class="student-grid" id="student-grid">
+                <!-- 学生卡片将通过JS动态生成 -->
+            </div>
+            <div class="duty-management">
+                <div class="duty-section">
+                    <h3>班级值日</h3>
+                    <div class="duty-selection" id="class-duty-selection"></div>
+                </div>
+                <div class="duty-section">
+                    <h3>包干区值日</h3>
+                    <div class="duty-selection" id="area-duty-selection"></div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-primary" id="save-attendance">保存</button>
+                <button type="button" class="btn-secondary" id="cancel-attendance">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框 - 添加学科 -->
+    <div class="modal" id="subject-modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>添加学科</h2>
+            <form id="subject-form">
+                <div class="form-group">
+                    <label for="subject-name">学科名称</label>
+                    <input type="text" id="subject-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject-color">学科颜色</label>
+                    <input type="color" id="subject-color" value="#4CAF50">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">添加</button>
+                    <button type="button" class="btn-secondary" id="cancel-subject">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 模态框 - 添加学生 -->
+    <div class="modal" id="add-student-modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>添加学生</h2>
+            <form id="student-form">
+                <div class="form-group">
+                    <label for="student-name">学生姓名</label>
+                    <input type="text" id="student-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="student-number">学号</label>
+                    <input type="number" id="student-number" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">添加</button>
+                    <button type="button" class="btn-secondary" id="cancel-add-student">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
