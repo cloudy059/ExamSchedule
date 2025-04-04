@@ -51,6 +51,22 @@ function init() {
 function updateDateDisplay() {
     const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
     currentDateEl.textContent = currentDate.toLocaleDateString('zh-CN', options);
+    
+    // 更新顶栏中的日期显示
+    const dateString = formatDate(currentDate);
+    const today = formatDate(new Date());
+    
+    // 更新顶栏中的"今日作业"标题，根据选择的日期显示"今日作业"或"XX日作业"
+    const homeworkTitleEl = document.getElementById('homework-title');
+    if (homeworkTitleEl) {
+        if (dateString === today) {
+            homeworkTitleEl.textContent = '今日作业';
+        } else {
+            const month = currentDate.getMonth() + 1;
+            const day = currentDate.getDate();
+            homeworkTitleEl.textContent = `${month}月${day}日作业`;
+        }
+    }
 }
 
 // 加载数据
@@ -174,22 +190,81 @@ function setupEventListeners() {
     // 日期选择
     const datePicker = document.getElementById('date-picker');
     datePicker.addEventListener('click', function() {
+        // 销毁之前的实例
+        if (this._flatpickr) {
+            this._flatpickr.destroy();
+        }
+        
+        // 创建新的日期选择器实例
         const picker = flatpickr(this, {
             defaultDate: currentDate,
             locale: 'zh',
             onChange: function(selectedDates) {
-                currentDate = selectedDates[0];
-                updateDateDisplay();
-                loadData();
-                renderSubjects();
-                updateHomeworkStats();
-                updateAttendanceStats();
-                picker.destroy();
-            },
-            onClose: function() {
-                picker.destroy();
+                if (selectedDates && selectedDates.length > 0) {
+                    // 先保存当前日期的数据
+                    const oldDateString = formatDate(currentDate);
+                    localStorage.setItem(`homework_${oldDateString}`, JSON.stringify(homeworkData));
+                    localStorage.setItem(`attendance_${oldDateString}`, JSON.stringify(attendanceData));
+                    localStorage.setItem(`classDuty_${oldDateString}`, JSON.stringify(classDuty));
+                    localStorage.setItem(`areaDuty_${oldDateString}`, JSON.stringify(areaDuty));
+                    
+                    // 更新当前日期
+                    currentDate = selectedDates[0];
+                    
+                    // 更新日期显示
+                    updateDateDisplay();
+                    
+                    // 重置数据
+                    const newDateString = formatDate(currentDate);
+                    
+                    // 重新初始化数据结构
+                    homeworkData = {};
+                    subjects.forEach(subject => {
+                        homeworkData[subject.id] = [];
+                    });
+                    
+                    attendanceData = {
+                        leave: [],
+                        late: [],
+                        absent: []
+                    };
+                    
+                    classDuty = [];
+                    areaDuty = [];
+                    
+                    // 加载新日期的数据
+                    const savedHomeworkData = localStorage.getItem(`homework_${newDateString}`);
+                    if (savedHomeworkData) {
+                        homeworkData = JSON.parse(savedHomeworkData);
+                    }
+                    
+                    const savedAttendanceData = localStorage.getItem(`attendance_${newDateString}`);
+                    if (savedAttendanceData) {
+                        attendanceData = JSON.parse(savedAttendanceData);
+                    }
+                    
+                    const savedClassDuty = localStorage.getItem(`classDuty_${newDateString}`);
+                    if (savedClassDuty) {
+                        classDuty = JSON.parse(savedClassDuty);
+                    }
+                    
+                    const savedAreaDuty = localStorage.getItem(`areaDuty_${newDateString}`);
+                    if (savedAreaDuty) {
+                        areaDuty = JSON.parse(savedAreaDuty);
+                    }
+                    
+                    // 更新界面
+                    renderSubjects();
+                    updateHomeworkStats();
+                    updateAttendanceStats();
+                    
+                    // 关闭日期选择器
+                    picker.close();
+                }
             }
         });
+        
+        this._flatpickr = picker;
         picker.open();
     });
 
@@ -226,7 +301,12 @@ function setupEventListeners() {
     // 关闭模态框按钮
     document.querySelectorAll('.close-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            closeAllModals();
+            // 获取当前按钮所在的模态框
+            const modal = this.closest('.modal');
+            if (modal) {
+                // 只关闭当前模态框
+                closeModal(modal);
+            }
         });
     });
 
@@ -234,7 +314,9 @@ function setupEventListeners() {
     document.getElementById('cancel-homework').addEventListener('click', closeAllModals);
     document.getElementById('cancel-attendance').addEventListener('click', closeAllModals);
     document.getElementById('cancel-subject').addEventListener('click', closeAllModals);
-    document.getElementById('cancel-add-student').addEventListener('click', closeAllModals);
+    document.getElementById('cancel-add-student').addEventListener('click', function() {
+        closeModal(addStudentModalEl);
+    });
 
     // 作业表单提交
     document.getElementById('homework-form').addEventListener('submit', function(e) {
@@ -661,13 +743,33 @@ function createStudentCard(student) {
     const card = document.createElement('div');
     card.className = 'student-card';
     
+    // 创建删除按钮
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'student-delete-btn';
+    deleteBtn.innerHTML = '×';
+    deleteBtn.title = '删除学生';
+    deleteBtn.addEventListener('click', function(e) {
+        e.stopPropagation(); // 阻止事件冒泡
+        if (confirm(`确定要删除学生 ${student.name} 吗？`)) {
+            deleteStudent(student.id);
+        }
+    });    
+    
+    // 创建包含姓名和学号的容器，添加更紧凑的样式
+    const nameContainer = document.createElement('div');
+    nameContainer.className = 'student-name-container compact';
+    
     const name = document.createElement('div');
     name.className = 'student-name';
     name.textContent = student.name;
     
     const number = document.createElement('div');
     number.className = 'student-number';
-    number.textContent = `学号: ${student.number}`;
+    number.textContent = `#${student.number}`; // 使用#代替"学号:"，更简洁
+    
+    // 将姓名和学号添加到同一个容器中
+    nameContainer.appendChild(name);
+    nameContainer.appendChild(number);
     
     const status = document.createElement('div');
     status.className = 'student-status';
@@ -688,7 +790,7 @@ function createStudentCard(student) {
     });
     leaveLabel.appendChild(leaveCheckbox);
     leaveLabel.appendChild(document.createTextNode('请假'));
-    
+        
     // 迟到复选框
     const lateLabel = document.createElement('label');
     lateLabel.className = 'status-checkbox';
@@ -727,12 +829,41 @@ function createStudentCard(student) {
     status.appendChild(lateLabel);
     status.appendChild(absentLabel);
     
-    card.appendChild(name);
-    card.appendChild(number);
+    card.appendChild(nameContainer);
     card.appendChild(status);
+    card.appendChild(deleteBtn); // 添加删除按钮到卡片
     card.dataset.studentId = student.id;
     
     return card;
+}
+
+// 添加删除学生的函数
+function deleteStudent(studentId) {
+    // 从学生数组中删除
+    const index = students.findIndex(s => s.id === studentId);
+    if (index !== -1) {
+        students.splice(index, 1);
+        
+        // 从出勤数据中删除
+        attendanceData.leave = attendanceData.leave.filter(id => id !== studentId);
+        attendanceData.late = attendanceData.late.filter(id => id !== studentId);
+        attendanceData.absent = attendanceData.absent.filter(id => id !== studentId);
+        
+        // 从值日生数据中删除
+        classDuty = classDuty.filter(id => id !== studentId);
+        areaDuty = areaDuty.filter(id => id !== studentId);
+        
+        // 保存数据
+        saveStudents();
+        saveAttendanceData();
+        saveClassDuty();
+        saveAreaDuty();
+        
+        // 重新渲染
+        renderStudentGrid();
+        renderDutySelections();
+        updateAttendanceStats();
+    }
 }
 
 // 渲染值日生选择
@@ -799,7 +930,7 @@ function addStudent() {
     students.push(newStudent);
     saveStudents();
     
-    closeAllModals();
+    closeModal(addStudentModalEl);
     renderStudentGrid();
     renderDutySelections();
 }
@@ -1180,12 +1311,24 @@ function formatDate(date) {
     return `${year}-${month}-${day}`;
 }
 
+// 关闭单个模态框
+function closeModal(modal) {
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
 // 关闭所有模态框
 function closeAllModals() {
     homeworkModalEl.style.display = 'none';
     attendanceModalEl.style.display = 'none';
     subjectModalEl.style.display = 'none';
     addStudentModalEl.style.display = 'none';
+}
+
+// 关闭特定模态框
+function closeModal(modalEl) {
+    modalEl.style.display = 'none';
 }
 
 // 初始化应用
