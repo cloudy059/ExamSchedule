@@ -569,26 +569,75 @@ body {
     margin-bottom: 20px;
 }
 
+/* 出勤管理按钮样式 */
 .attendance-actions button {
     padding: 8px 15px;
-    background-color: #f0f0f0;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: var(--transition);
+    color: white;
+    font-weight: 500;
 }
 
-.dark-mode .attendance-actions button {
-    background-color: #333;
-    color: #eee;
+/* 导入学生按钮 */
+.attendance-actions button#import-students {
+    background-color: var(--secondary-color);
 }
 
-.attendance-actions button:hover {
-    background-color: #e0e0e0;
+.attendance-actions button#import-students:hover {
+    background-color: #1976D2;
 }
 
-.dark-mode .attendance-actions button:hover {
-    background-color: #444;
+/* 导出模板按钮 */
+.attendance-actions button#export-template {
+    background-color: #9C27B0;
+}
+
+.attendance-actions button#export-template:hover {
+    background-color: #7B1FA2;
+}
+
+/* 添加学生按钮 */
+.attendance-actions button#add-student {
+    background-color: var(--primary-color);
+}
+
+.attendance-actions button#add-student:hover {
+    background-color: #388E3C;
+}
+
+/* 清空勾选按钮 */
+.attendance-actions button#clear-attendance {
+    background-color: var(--warning-color);
+    color: #333;
+}
+
+.attendance-actions button#clear-attendance:hover {
+    background-color: #FFA000;
+}
+
+/* 清空名单按钮 */
+.attendance-actions button#clear-students {
+    background-color: var(--danger-color);
+}
+
+.attendance-actions button#clear-students:hover {
+    background-color: #D32F2F;
+}
+
+/* 保存按钮 */
+.attendance-actions button#save-attendance {
+    background-color: var(--success-color);
+}
+
+.attendance-actions button#save-attendance:hover {
+    background-color: #689F38;
+}
+
+/* 暗色模式下的按钮样式调整 */
+.dark-mode .attendance-actions button#clear-attendance {
+    color: #f5f5f5;
 }
 
 .student-grid {
@@ -603,6 +652,7 @@ body {
     border-radius: 4px;
     padding: 10px;
     transition: var(--transition);
+    position: relative; /* 添加相对定位，以便放置删除按钮 */
 }
 
 .dark-mode .student-card {
@@ -617,15 +667,53 @@ body {
     background-color: #333;
 }
 
+/* 添加删除按钮样式 */
+.student-delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgba(244, 67, 54, 0.1);
+    color: var(--danger-color);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.student-card:hover .student-delete-btn {
+    opacity: 1;
+}
+
+.student-delete-btn:hover {
+    background-color: rgba(244, 67, 54, 0.2);
+}
+
+.student-name-container.compact {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    padding: 0 5px;
+}
+
 .student-name {
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-right: 8px;
 }
 
 .student-number {
-    font-size: 0.8rem;
-    color: #888;
-    margin-bottom: 8px;
+    font-size: 0.85em;
+    color: #666;
+    background-color: #f0f0f0;
+    padding: 1px 5px;
+    border-radius: 3px;
 }
 
 .dark-mode .student-number {
