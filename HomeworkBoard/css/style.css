@@ -41,7 +41,7 @@ body {
 }
 
 .container {
-    max-width: 1600px;
+    max-width: 1920px; /* 从1600px增加到1920px */
     margin: 0 auto;
     padding: 20px;
 }
@@ -114,7 +114,7 @@ body {
 /* 主内容区域 */
 .main-content {
     display: grid;
-    grid-template-columns: 3fr 1fr; /* 从2fr 1fr改为3fr 1fr，使出勤区域更窄 */
+    grid-template-columns: 4fr 1fr; /* 从3fr 1fr改为4fr 1fr，进一步扩大作业区域 */
     gap: 20px;
 }
 
@@ -165,7 +165,7 @@ body {
 
 .subjects-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 从250px增加到280px */
     gap: 20px;
 }
 
@@ -444,8 +444,8 @@ body {
 }
 
 .attendance-modal-content {
-    max-width: 800px; /* 从800px减小到600px */
-    max-height: 80vh;
+    max-width: 1000px; /* 从800px增加到1000px */
+    max-height: 85vh; /* 从80vh增加到85vh */
     overflow-y: auto;
 }
 
@@ -761,7 +761,7 @@ body {
 }
 
 /* 响应式设计 */
-@media (max-width: 1200px) {
+@media (max-width: 1400px) { /* 从1200px增加到1400px */
     .main-content {
         grid-template-columns: 1fr;
     }
@@ -771,7 +771,7 @@ body {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) { /* 从768px增加到900px */
     .top-bar {
         flex-direction: column;
         align-items: flex-start;
