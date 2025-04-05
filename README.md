@@ -16,7 +16,7 @@
 ![监考分配](https://github.com/user-attachments/assets/28f5c9c7-ad0b-4ac4-aac4-48e4b43444dc)
 
 ## 如何部署？   
- 您可以点击查看 [ExamShowboard网页端 部署文档](https://github.com/fhzit/ExamSchedule/wiki)了解详细的部署教程。   
+ 您可以点击查看 [ExamShowboard网页端 部署文档](https://docs.examaware.tech/web/web-deploy.html)了解详细的部署教程。   
 
 ## 开发说明
 - 网页从ExamAware/ExamSchedule复刻的，另用Trae迭代出作业看板，考试语音播报和监考分配，作业看板界面模仿了其他作者，自己是刚接触网页制作的小白。
